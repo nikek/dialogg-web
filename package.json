@@ -1,0 +1,28 @@
+{
+  "name": "dialogg-web",
+  "version": "1.0.0",
+  "description": "Web server for dialogg",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "dialogg-web"
+  },
+  "keywords": [
+    "dialogg"
+  ],
+  "author": "Niklas Ek",
+  "license": "MIT",
+  "scripts": {
+    "start": "npm run riot && npm run serve",
+    "riot": "riot ./tags ./public",
+    "serve": "node index.js"
+  },
+  "dependencies": {
+    "grapnel-server": "^0.2.2",
+    "node-static": "^0.7.7",
+    "riot": "^2.2.4"
+  }
+}
