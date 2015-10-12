@@ -4,7 +4,9 @@
   "description": "Web server for dialogg",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "start": "npm run riot && npm run serve",
+    "riot": "riot ./tags ./public",
+    "serve": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -15,14 +17,10 @@
   ],
   "author": "Niklas Ek",
   "license": "MIT",
-  "scripts": {
-    "start": "npm run riot && npm run serve",
-    "riot": "riot ./tags ./public",
-    "serve": "node index.js"
-  },
   "dependencies": {
     "grapnel-server": "^0.2.2",
     "node-static": "^0.7.7",
+    "redux": "^3.0.2",
     "riot": "^2.2.4"
   }
 }

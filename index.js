@@ -1,8 +1,9 @@
 // IMPORT
 var fs = require('fs'),
     http = require('http'),
-    router = require('grapnel-server'),
     statics = require('node-static'),
+    router = require('grapnel-server'),
+    redux = require('redux'),
     riot = require('riot'),
     tag = require('./public/home.js');
 
@@ -15,7 +16,9 @@ var staticFiles = new statics.Server('./public');
 // CONSTANTS
 var indexHtml = fs.readFileSync('./index.html', 'utf-8');   // LAYOUT
 var mainTag = 'app';
-var defaultState = { dynamic: 'AWESOMENESSSSSSS' };
+var defaultState = redux.createStore(function(state) {
+  return state;
+}, { dynamic: 'AWESOMENESSSSSSS' });
 
 
 // Inject riot rendered view into index.html
@@ -33,7 +36,7 @@ var injectRiotView = function(state) {
 // RIOT RESPONSE
 var riotify = function(req, res, next) {
   res.writeHeader(200, {"Content-Type": "text/html"});
-  res.end(injectRiotView(Object.assign({}, defaultState, {dynamic: req.url})));
+  res.end(injectRiotView(Object.assign({}, defaultState.getState(), {dynamic: req.url})));
 };
 
 
