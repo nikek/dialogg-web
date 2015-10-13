@@ -1,5 +1,7 @@
 <app>
   <h1>Hejsan Home tag {dynamic}</h1>
 
-  this.dynamic = opts.dynamic || 'oklart'
+  <script>
+    this.dynamic = opts.dynamic || 'oklart';
+  </script>
 </app>
