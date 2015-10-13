@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run riot && npm run serve",
-    "riot": "riot ./tags ./public",
+    "riot": "riot ./tags ./public/tags.js",
     "serve": "node index.js"
   },
   "repository": {

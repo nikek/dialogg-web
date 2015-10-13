@@ -5,7 +5,7 @@ var fs = require('fs'),
     router = require('grapnel-server'),
     redux = require('redux'),
     riot = require('riot'),
-    tag = require('./public/home.js');
+    tag = require('./public/tags.js');
 
 
 // CONSTRUCT
@@ -13,30 +13,29 @@ var route = router.start();
 var staticFiles = new statics.Server('./public');
 
 
-// CONSTANTS
+// HTML SETUP
 var indexHtml = fs.readFileSync('./index.html', 'utf-8');   // LAYOUT
-var mainTag = 'app';
+var mainTag = 'html';
+var regex = new RegExp('<' + mainTag + '(/>|>.*<\/' + mainTag + '>)'); // match <app/> or <app></app>
+
+
+// STORE
 var defaultState = redux.createStore(function(state) {
   return state;
 }, { dynamic: 'AWESOMENESSSSSSS' });
 
 
 // Inject riot rendered view into index.html
-var injectRiotView = function(state) {
+var renderHTML = function(state) {
   console.log(state);
-
-  // Render riot root tag with app state
-  var view = riot.render(mainTag, state);
-  var regex = new RegExp('<' + mainTag + '(/>|>.*<\/' + mainTag + '>)'); // match <app/> or <app></app>
-
-  return indexHtml.replace(regex, view);
+  return indexHtml.replace(regex, riot.render(mainTag, state));
 };
 
 
 // RIOT RESPONSE
 var riotify = function(req, res, next) {
   res.writeHeader(200, {"Content-Type": "text/html"});
-  res.end(injectRiotView(Object.assign({}, defaultState.getState(), {dynamic: req.url})));
+  res.end(renderHTML(Object.assign({}, defaultState.getState(), {dynamic: req.url, title: req.url.split('/')[1]})));
 };
 
 
