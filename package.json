@@ -18,8 +18,7 @@
   "author": "Niklas Ek",
   "license": "MIT",
   "dependencies": {
-    "grapnel-server": "^0.2.2",
-    "node-static": "^0.7.7",
+    "express": "^4.13.3",
     "redux": "^3.0.2",
     "riot": "^2.2.4"
   }

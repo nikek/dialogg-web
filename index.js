@@ -1,56 +1,20 @@
-// IMPORT
-var fs = require('fs'),
-    http = require('http'),
-    statics = require('node-static'),
-    router = require('grapnel-server'),
+var express = require('express'),
     redux = require('redux'),
     riot = require('riot'),
     tag = require('./public/tags.js');
 
+var router = express();
+var port = 3000;
+var store = redux.createStore(function(state) { return state; }, { dynamic: 'AWESOMENESSSSSSS' });
 
-// CONSTRUCT
-var route = router.start();
-var staticFiles = new statics.Server('./public');
-
-
-// HTML SETUP
-var indexHtml = fs.readFileSync('./index.html', 'utf-8');   // LAYOUT
-var mainTag = 'html';
-var regex = new RegExp('<' + mainTag + '(/>|>.*<\/' + mainTag + '>)'); // match <app/> or <app></app>
-
-
-// STORE
-var defaultState = redux.createStore(function(state) {
-  return state;
-}, { dynamic: 'AWESOMENESSSSSSS' });
-
-
-// Inject riot rendered view into index.html
-var renderHTML = function(state) {
-  console.log(state);
-  return indexHtml.replace(regex, riot.render(mainTag, state));
+var handleReq = function(req, res, next) {
+  var derivedState = { dynamic: req.url, title: req.url.split('/')[1] };
+  res.send('<!DOCTYPE html>\n' + riot.render('html', Object.assign({}, store.getState(), derivedState)));
 };
 
+router.use('/static', express.static(__dirname+'/public'));
+router.get('/', handleReq);
+router.get('/hej', handleReq);
 
-// RIOT RESPONSE
-var riotify = function(req, res, next) {
-  res.writeHeader(200, {"Content-Type": "text/html"});
-  res.end(renderHTML(Object.assign({}, defaultState.getState(), {dynamic: req.url, title: req.url.split('/')[1]})));
-};
-
-
-// ROUTES
-router.get('/', riotify);
-router.get('/hej', riotify);
-
-
-// START SERVER
-http.createServer(function(request, response) {
-  // handle static files
-  request.addListener('end', function () {
-    staticFiles.serve(request, response);
-  }).resume();
-
-  // route to router
-  route(request, response);
-}).listen(3000);
+router.listen(port);
+console.log('magic on port ' + port);
